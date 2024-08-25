@@ -1,0 +1,45 @@
+PIPELINE FOR DEPLOYING WAR PACKAGE IN THREE Different OS SERVERS (UBUNTU--TEST, LINUX-QA, REDHAT-PROD)
+
+pipeline {
+    agent any
+    tools {
+     maven 'maven3'   
+    }
+    stages {
+        stage('cont_download') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Sowmyagummalla/Project1.git'
+            }
+        }
+        stage('cont-build') {
+            steps {
+                sh 'mvn package'
+            }
+        }
+        stage('cont_deploy_to_test') {
+            steps {
+                sh 'scp target/devops.war ubuntu@172.31.38.70:/var/lib/tomcat/webapps/myapp123.war'
+            }
+        }
+        stage('cont_test') {
+            steps {
+               sh 'curl http://54.91.153.130:8080/myapp123/ | grep -i application'
+            }
+        }
+        stage('cont_install_to QA') {
+            steps {
+                sh 'scp target/devops.war ec2-user@172.31.43.185:/var/lib/tomcat/webapps/pre-release.war'
+            }
+        }
+        stage('cont_validate') {
+           steps {
+               sh 'curl http://35.173.212.54:8080/pre-release/ | grep -i application'
+            }
+        }
+        stage('cont_deploy_Prod') {
+            steps {
+                sh 'scp target/devops.war ec2-user@172.31.40.142:/var/lib/tomcat/webapps/release1.war'
+            }
+        }
+    }
+}
