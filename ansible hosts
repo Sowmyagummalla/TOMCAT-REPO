@@ -1,0 +1,11 @@
+Ansible hosts file for connecting to multi os like ubuntu , linux , redhat
+
+sudo nano /etc/ansible/hosts
+[test]
+ubuntu server private IP
+[servers]
+linux-server ansible_host=172.31.43.185 ansible_user=ec2-user
+redhat-server ansible_host=172.31.40.142 ansible_user=ec2-user
+# Next save this by ctrl+o , enter, ctrl+x
+
+
