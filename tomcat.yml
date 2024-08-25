@@ -1,0 +1,36 @@
+TOMCAT INSTALLATION IN LINUX AND REDHAT SERVERS
+
+- hosts: servers
+  become: true  # Ensure commands are run with elevated privileges
+  tasks:
+    - name: download tomcat from dlcdn
+      get_url:
+        url: "https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.93/bin/apache-tomcat-9.0.93.tar.gz"
+        dest: "/tmp/apache-tomcat-9.0.93.tar.gz"  # Use /tmp or another writable directory
+
+    - name: untar the apache file
+      command: tar -zxvf /tmp/apache-tomcat-9.0.93.tar.gz
+      args:
+        chdir: /var/lib  # Change to /var/lib to extract the files
+
+    - name: rename the tomcat
+      command: mv /var/lib/apache-tomcat-9.0.93 /var/lib/tomcat
+      tags: abc
+
+    - name: install java
+      yum:
+        name: java-1.8.0-openjdk
+        state: present
+
+    - name: setting the roles in tomcat-users.xml file
+      template:
+        src: tomcat-users.xml
+        dest: /var/lib/tomcat/conf/tomcat-users.xml
+
+    - name: delete two lines in context.xml
+      template:
+        src: context.xml
+        dest: /var/lib/tomcat/webapps/manager/META-INF/context.xml
+
+    - name: start the tomcat
+      shell: nohup /var/lib/tomcat/bin/startup.sh
