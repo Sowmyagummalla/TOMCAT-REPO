@@ -9,3 +9,12 @@ redhat-server ansible_host=172.31.40.142 ansible_user=ec2-user
 # Next save this by ctrl+o , enter, ctrl+x
 
 
+Ansible hosts for connecting same OS like only ubuntu or only linux
+
+sudo nano /etc/ansible/hosts
+[test]
+NODE1 PRIVATE IP
+[QA]
+NODE2 PRIVATE IP
+[PROD]
+NODE3 PRIVATE IP
